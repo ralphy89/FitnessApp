@@ -28,8 +28,8 @@ class SeanceService {
   Future<void> _enregistrerDansFirestore(Seance seance) async {
     // Étape 1 : Enregistrer la séance dans Firestore
     final seanceData = <String, dynamic>{
-      'id': await SharedPreferencesHelper.getUserId(),
-      'id_user': seance.userId,
+      'id': seance.id,
+      'id_user': await SharedPreferencesHelper.getUserId(),
       'type_exercice': seance.typeExercice,
       'duree': seance.duree.inMinutes,
       'caloriesbrulees': roundToDecimalPlaces(seance.caloriesBrulees, 2),
@@ -53,7 +53,6 @@ class SeanceService {
         .where('type_objectif', isEqualTo: seance.typeExercice)
         .where('statut', isEqualTo: 'En cours')
         .get();
-
     for (var objectifDoc in objectifsQuery.docs) {
 
 
@@ -107,8 +106,8 @@ class SeanceService {
 
     // Convertir les données de la séance en JSON
     var seanceData = {
-      'id': await SharedPreferencesHelper.getUserId(),
-      'id_user': seance.userId,
+      'id': seance.id,
+      'id_user': await SharedPreferencesHelper.getUserId(),
       'type_exercice': seance.typeExercice,
       'duree': seance.duree.inMinutes,
       'caloriesbrulees': roundToDecimalPlaces(seance.caloriesBrulees, 2).toString(),
