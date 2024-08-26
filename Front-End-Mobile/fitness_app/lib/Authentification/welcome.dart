@@ -53,6 +53,8 @@ class WelcomePage extends StatelessWidget {
 
   void handleSignIn(BuildContext context, String fournisseur) async {
     try {
+      final prefs = await SharedPreferences.getInstance();
+
       User? user;
       bool isNewUser = false;
       String? userId;
@@ -93,7 +95,7 @@ class WelcomePage extends StatelessWidget {
           };
 
           // Configurer l'URL de l'API REST
-          var url = Uri.http('192.168.43.190:3000', '/api/users/');
+          var url = Uri.http('${prefs.getString('ip')}', '/api/users/');
 
           // Envoyer les informations à l'API REST
           var response = await http.post(
@@ -109,7 +111,7 @@ class WelcomePage extends StatelessWidget {
             // Analyse de la réponse JSON pour récupérer le champ "_id"
             var jsonResponse = jsonDecode(response.body);
             userId = jsonResponse["_id"];
-
+            _storeUserId(userId!);
             print('User ID: $userId');
 
             // Vous pouvez maintenant utiliser cet identifiant comme vous le souhaitez
@@ -124,9 +126,8 @@ class WelcomePage extends StatelessWidget {
             "email": email,
             "uid": uid,
           };
-
           // Configurer l'URL de l'API REST
-          var url = Uri.http('192.168.43.190:3000', '/api/users/data/$email');
+          var url = Uri.http('${await prefs.getString('ip')}', '/api/users/data/$email');
 
           // Envoyer les informations à l'API REST
           var response = await http.get(
@@ -141,12 +142,13 @@ class WelcomePage extends StatelessWidget {
             // Analyse de la réponse JSON pour récupérer le champ "_id"
             var jsonResponse = jsonDecode(response.body);
             userId = jsonResponse["_id"];
+            _storeUserId(userId!);
             print('User ID: $userId');
           }
 
         }
 
-        _storeUserId(userId!);
+
         // Navigate to home.dart and pass the user information
         Navigator.push(
           context,

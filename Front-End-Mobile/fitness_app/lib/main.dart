@@ -15,6 +15,7 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   // Ip:port de votre serveur REST API
   await prefs.setString('baseUrl', 'http://192.168.43.190:3000');
+  await prefs.setString('ip', '192.168.43.190:3000');
   runApp(const MyApp());
 }
 

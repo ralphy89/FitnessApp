@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../components/button.dart';
 import '../components/square_tile.dart'; // Ensure the path is correct
 import 'home.dart';
@@ -205,9 +206,9 @@ class SignUpPage extends StatelessWidget {
                                         "auth_via":"Email",
                                         "password":password
                                       };
-
+                                      final prefs = await SharedPreferences.getInstance();
                                       // Configurer l'URL de l'API REST
-                                      var url = Uri.http('192.168.43.190:3000', '/api/users/');
+                                      var url = Uri.http('${await prefs.getString('ip')}', '/api/users/');
 
                                       // Envoyer les informations à l'API REST
                                       var response = await http.post(

@@ -14,7 +14,7 @@ const ObjectifSchema = new Schema({
     type_objectif: {
         type: String,
         required: [true, "Please specify the type of objective"], // Message d'erreur si le type d'objectif n'est pas fourni
-        enum: ['Running', 'Cycling', 'Swimming', 'Weightlifting', 'Yoga', 'Other'], // Liste des types d'objectifs possibles
+        enum: ['Running', 'Cycling', 'Swimming', 'Walking', 'Weightlifting', 'Yoga', 'Other'], // Liste des types d'objectifs possibles
         default: 'Autre' // Valeur par défaut si aucun type d'objectif n'est spécifié
     },
     titre:{

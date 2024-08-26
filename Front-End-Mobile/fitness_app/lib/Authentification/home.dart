@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app/Authentification/welcome.dart';
 import 'package:fitness_app/seance/suivi_automatic_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../seance/seance_historique.dart';
@@ -19,7 +20,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
 
   const MyApp({super.key});
 
@@ -62,6 +62,7 @@ class HomeScreen extends StatefulWidget {
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
+
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -110,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _goalsFuture = _fetchGoals();
       });
     }
+
     Future<List<dynamic>> _fetchGoals() async {
       try {
 
@@ -152,6 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     @override
     Widget build(BuildContext context) {
+
       return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -218,6 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? FloatingActionButton(
           onPressed: () {
             _showAddGoalDialog(context);
+
           },
           backgroundColor: Colors.green,
           child: const Icon(Icons.add),
@@ -422,6 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
           });
 
           print("Goal saved successfully to Firestore and API");
+
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Goal saved successfully'), backgroundColor: Colors.green),
           );
@@ -527,6 +532,7 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
+
                 },
                 child: const Text("Annuler"),
               ),
@@ -543,7 +549,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     endDate: endDate,
                     progres: x / double.parse(targetValueController.text),
                   );
+
                   Navigator.of(context).pop();
+
                 },
                 child: const Text("Modifier"),
               ),
@@ -612,6 +620,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SnackBar(content: Text('Goal updated successfully'), backgroundColor: Colors.green),
         );
         print('Goal updated successfully in API');
+        _refreshGoals();
       } else {
         print('Failed to update goal in API');
         print(response.body);
@@ -703,7 +712,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
     Widget _buildHomeContent() {
-
+      _refreshGoals();
      return FutureBuilder<List<dynamic>>(
       future: _goalsFuture,
       builder: (context, snapshot) {
@@ -1150,6 +1159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _logOut() async {
     try {
       await FirebaseAuth.instance.signOut();
+      await GoogleSignIn().signOut();
       // Clear the _id from SharedPreferences
       await SharedPreferencesHelper.removeUserId();
       ScaffoldMessenger.of(context).showSnackBar(

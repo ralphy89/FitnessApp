@@ -14,7 +14,7 @@ const SeanceSchema = new Schema({
     type_exercice: {
         type: String,
         required: [true, "Please specify the type of exercise"], // Message d'erreur si le type d'exercice n'est pas fourni
-        enum: ['Running', 'Cycling', 'Swimming', 'Weightlifting', 'Yoga', 'Other'], // Liste des types d'exercices possibles
+        enum: ['Running', 'Cycling', 'Walking', 'Swimming', 'Weightlifting', 'Yoga', 'Other'], // Liste des types d'exercices possibles
         default: 'Other' // Valeur par défaut si aucun type d'exercice n'est spécifié
     },
     duree: {

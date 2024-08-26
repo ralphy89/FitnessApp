@@ -5,10 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Authentification/welcome.dart';
 import 'seance_model.dart';
-
 class SeanceService {
 
-
+  bool new_ = false;
   // URL de l'API REST
   late final String baseUrl;
 
@@ -23,7 +22,7 @@ class SeanceService {
 
     // Ensuite, envoyer les données à l'API REST
     await _enregistrerDansAPI(seance);
-
+    new_ = true;
   }
 
   Future<void> _enregistrerDansFirestore(Seance seance) async {
