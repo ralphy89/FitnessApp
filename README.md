@@ -56,7 +56,9 @@ Avant de commencer, assurez-vous d'avoir les outils suivants installés :
      ```
 
 3. **Lancez l'application mobile :**
-
+   N.B dans le fichier `./lib/main.dart` il faut adapter l'ip et le port en fonction de votre serveur API (NodeJs)
+  `  await prefs.setString('baseUrl', 'http://192.168.43.190:3000');
+     await prefs.setString('ip', '192.168.43.190:3000'); `
    - Accédez au répertoire `./Front-End-Mobile/fitness_app` :
    
      ```bash
