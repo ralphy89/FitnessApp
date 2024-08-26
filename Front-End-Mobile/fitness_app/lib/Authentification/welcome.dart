@@ -5,6 +5,7 @@ import 'package:fitness_app/Authentification/signUp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../components/button.dart';
 import '../components/square_tile.dart';
 import '../firebase_options.dart';
@@ -44,6 +45,12 @@ class WelcomePage extends StatelessWidget {
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 
+  Future<void> _storeUserId(String userId) async {
+    await SharedPreferencesHelper.storeUserId(userId);
+  }
+
+
+
   void handleSignIn(BuildContext context, String fournisseur) async {
     try {
       User? user;
@@ -65,8 +72,6 @@ class WelcomePage extends StatelessWidget {
         String? email = user.email;
         String? uid = user.uid;
         String? photoURL = user.photoURL;
-
-
 
         // Print user info (for debugging)
         print("Nom de l'utilisateur : $name");
@@ -104,6 +109,7 @@ class WelcomePage extends StatelessWidget {
             // Analyse de la réponse JSON pour récupérer le champ "_id"
             var jsonResponse = jsonDecode(response.body);
             userId = jsonResponse["_id"];
+
             print('User ID: $userId');
 
             // Vous pouvez maintenant utiliser cet identifiant comme vous le souhaitez
@@ -112,8 +118,35 @@ class WelcomePage extends StatelessWidget {
         } else {
           print("Connexion d'un utilisateur existant : $name");
           // Actions spécifiques pour les utilisateurs existants
+
+          // Créer un objet JSON avec les informations utilisateur
+          Map<String, dynamic> userData = {
+            "email": email,
+            "uid": uid,
+          };
+
+          // Configurer l'URL de l'API REST
+          var url = Uri.http('192.168.43.190:3000', '/api/users/data/$email');
+
+          // Envoyer les informations à l'API REST
+          var response = await http.get(
+            url,
+            headers: {"Content-Type": "application/json"},
+          );
+
+          // Afficher le statut de la réponse
+          print('Response status: ${response.statusCode}');
+          print('Response body: ${response.body}');
+          if (response.statusCode == 200) {
+            // Analyse de la réponse JSON pour récupérer le champ "_id"
+            var jsonResponse = jsonDecode(response.body);
+            userId = jsonResponse["_id"];
+            print('User ID: $userId');
+          }
+
         }
 
+        _storeUserId(userId!);
         // Navigate to home.dart and pass the user information
         Navigator.push(
           context,
@@ -428,6 +461,23 @@ class WelcomePage extends StatelessWidget {
   }
 }
 
+
+class SharedPreferencesHelper {
+  static Future<void> storeUserId(String userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('_id', userId);
+  }
+
+  static Future<String?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('_id');
+  }
+
+  static Future<void> removeUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('_id');
+  }
+}
 extension on AccessToken {
   String get token => '';
 }

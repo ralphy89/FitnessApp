@@ -20,7 +20,7 @@ const SeanceSchema = new Schema({
     duree: {
         type: Number,
         required: [true, "Please enter the duration of the session"], // Message d'erreur si la durée n'est pas fournie
-        min: [1, "Duration must be at least 1 minute"], // Durée minimale de 1 minute
+        min: [0, "Duration must be at least 1 minute"], // Durée minimale de 1 minute
         max: [1440, "Duration cannot exceed 24 hours"]  // Durée maximale de 1440 minutes (24 heures)
     },
     calories_brulees: {

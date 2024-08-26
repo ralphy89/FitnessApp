@@ -39,6 +39,7 @@ const getSeance = async (req, res) => {
 const getSeancesByIdUser = async (req, res) => {
     try {
         const { id } = req.params;
+        
         const seances = await Seance.find({ id_user: id });
         res.status(200).json(seances);
     } catch (error) {
